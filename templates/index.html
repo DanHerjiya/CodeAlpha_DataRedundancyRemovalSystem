@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodeAlpha | Data Redundancy Removal System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">CODEALPHA CLOUD COMPUTING · TASK 1</p>
+      <h1>Data Redundancy Removal System</h1>
+      <p class="subtitle">Validate records, detect duplicate email addresses, and keep the database clean.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="summary">
+      <div>
+        <p class="muted">Unique records stored</p>
+        <p class="count">{{ total_records }}</p>
+      </div>
+      <div class="summary-icon" aria-hidden="true">✓</div>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="notice {{ category }}" role="status">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <section class="panel">
+      <h2>Add a record</h2>
+      <p class="muted">The system checks the email address before saving the record.</p>
+      <form method="post" action="{{ url_for('index') }}">
+        <label for="name">Full name</label>
+        <input id="name" name="name" type="text" maxlength="100" placeholder="e.g. Amina Yusuf" required>
+
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" maxlength="254" placeholder="e.g. amina@example.com" required>
+
+        <label for="phone">Phone number</label>
+        <input id="phone" name="phone" type="tel" maxlength="30" placeholder="e.g. 08012345678" required>
+
+        <button type="submit">Validate and save record</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="table-heading">
+        <div>
+          <h2>Saved records</h2>
+          <p class="muted">Only records with unique email addresses are stored.</p>
+        </div>
+        <span class="pill">{{ total_records }} total</span>
+      </div>
+      {% if records %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Date added (UTC)</th></tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+            <tr>
+              <td>{{ record.id }}</td>
+              <td>{{ record.name }}</td>
+              <td>{{ record.email }}</td>
+              <td>{{ record.phone }}</td>
+              <td>{{ record.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <div class="empty">
+          <p>No records yet.</p>
+          <p class="muted">Add a test record using the form above to get started.</p>
+        </div>
+      {% endif %}
+    </section>
+
+    <footer>
+      <p>Student project demonstration · Python · Flask · SQLite</p>
+      <p class="muted">Use fictional data for testing. This demo is not intended for confidential personal information.</p>
+    </footer>
+  </main>
+</body>
+</html>
